@@ -52,6 +52,12 @@ app.get('/users/:id', async (req, res) => {
 
 app.post('/users', async (req, res) => {
     try {
+        const { nome, email } = req.body;
+
+        if (!nome || !email) {
+            return res.status(400).json({ error: 'Nome e email são obrigatórios' });
+        }
+        
         const users = await readUsers();
         const novoUsuario = {
             id: crypto.randomUUID(),
