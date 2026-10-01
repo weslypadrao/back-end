@@ -99,6 +99,25 @@ app.put('/users/:id', async (req, res) => {
     }
 });
 
+app.delete('/users/:id', async (req, res) => {
+    try {
+        const { id } = req.params;
+        const users = await readUsers();
+        
+        const index = users.findIndex(u => u.id === id);
+        if (index === -1) {
+            return res.status(404).json({ error: 'Usuário não encontrado' });
+        }
+
+        users.splice(index, 1);
+        await writeUsers(users);
+        
+        res.status(200).json({ message: 'Usuário deletado com sucesso' });
+    } catch (err) {
+        res.status(500).json({ error: 'Error ao deletar dados' });
+    }
+});
+
 app.listen(PORT, () => {
     console.log(`Servidor rodando em http://localhost:${PORT}`);
 });
